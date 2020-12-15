@@ -1,0 +1,69 @@
+@charset "ISO-8859-1";
+/* Show it is fixed to the top */
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
+container {
+	width: 90%;
+}
+
+hr{
+	border: none;
+	height: 2px;
+	color: #343A40;
+	background-color: #343A40;
+}
+.box{
+	border: 1px solid red;
+}
+
+img{
+	max-height: 100%;
+	max-width: 100%;
+	display: block;
+}
+
+.home-headline{
+	font-family: 'Times New Roman', Times, serif;
+	font-size: 24px;
+	margin: auto;
+	color: #fff;
+	text-align: center;
+	margin-top: 0px;
+}
+.home-headline span{
+	background-color: #343A40;
+	padding: 5px 25px;
+}
+/*
+Removes white gap between slides - chagnge to base color of slide images
+*/
+.carousel {
+
+}
+
+/*
+Forces image to be 100% width and not max width of 100%
+*/
+.carousel-item .img-fluid {
+  width:100%;
+}
+
+.corousel-caption .b{
+	top: 500px;
+	position: absolute;
+}
+
+/* 
+anchors are inline so you need ot make them block to go full width
+*/
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    color:black;
+    background-color:#fcd900;
+    }
+
+.carousel-item a {
+  display: block;
+  width:100%;
+}

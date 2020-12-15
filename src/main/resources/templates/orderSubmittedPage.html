@@ -1,0 +1,65 @@
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="common/header :: common-header"></head>
+
+<body>
+
+	<div th:replace="common/header :: navbar"></div>
+
+
+
+	<div class="container" style="width: 100%">
+		<div class="row" style="margin-top: 10px;">
+			<div class="col-sm-12">
+				<div class="alert alert-success">
+					<h3>
+						<i class="fa fa-check" aria-hidden="true" style="color: lime;"></i>
+						Thank you, your order has been placed. Please check your mail for
+						order details.
+					</h3>
+					<h4>
+						The estimated delivery date is <span
+							th:text="${estimatedDeliveryDate}"></span>
+					</h4>
+				</div>
+				<h3>List of items</h3>
+				<div class="row" th:each="cartItem : ${cartItemList}">
+					<hr />
+					<div class="col-sm-2"></div>
+					<div class="col-sm-2">
+						<div class="row" th:each="cartItem : ${cartItemList}">
+							<hr />
+							<div class="col-sm-2">
+								<a th:href="@{/bookDetail(id=${cartItem.book.id})}"> <img
+									class="img img-responsive"
+									src="#{adminPath}+@{/images/book/}+${cartItem.book.id}+'.png'"
+									style="width: 70px; height: 100px;" />
+								</a>
+							</div>
+							<div class="col-sm-6">
+								<h5 th:text="${cartItem.book.getTitle()}"></h5>
+							</div>
+							<div class="col-sm-2">
+								<h5 style="color: #db3208; font-size: large;">
+									&#8377;<span th:text="${cartItem.book.ourPrice}"
+										th:style="${cartItem.book.inStockNumber}==0? 'text-decoration: line-through' : ''"></span>
+								</h5>
+							</div>
+							<div class="col-sm-2">
+								<h5 th:text="${cartItem.qty}" style="font-size: large;"></h5>
+							</div>
+						</div> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<div th:replace="common/header :: body-bottom-scripts"></div>
+</body>
+</html>

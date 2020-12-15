@@ -1,0 +1,452 @@
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="common/header :: common-header"></head>
+
+<body>
+
+	<div th:replace="common/header :: navbar"></div>
+
+	<div class="container" style="width: 100%">
+		<div class="row">
+			<div class="col-lg-8 col-md-8 col-xs-8">
+				<h2 class="section-headline">
+					<span
+						th:text="${user}? ${#strings.toUpperCase(user.username)} : 'All Books'"></span>
+				</h2>
+			</div>
+		</div>
+		<ul class="nav nav-tabs">
+			<li th:classappend="${classActiveEdit}? 'active'" class="nav-item"><a
+				th:classappend="${classActiveEdit}? 'active'" class="nav-link"
+				data-toggle="tab" href="#tab1">Edit</a></li>
+			<li th:classappend="${classActiveOrders}? 'active'" class="nav-item"><a
+				th:classappend="${classActiveOrders}? 'active'" class="nav-link"
+				data-toggle="tab" href="#tab2">Orders</a></li>
+			<li th:classappend="${classActiveBilling}? 'active'" class="nav-item"><a
+				th:classappend="${classActiveBilling}? 'active'" class="nav-link"
+				data-toggle="tab" href="#tab3">Billing</a></li>
+			<li th:classappend="${classActiveShipping}? 'active'"
+				class="nav-item"><a
+				th:classappend="${classActiveShipping}? 'active'" class="nav-link"
+				data-toggle="tab" href="#tab4">Shipping</a></li>
+		</ul>
+
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div th:classappend="${classActiveEdit}? 'in active'"
+				class="tab-pane container" id="tab1">
+				<div class="panel-group">
+					<div class="panel panel-default">
+						<div class="panel-body">
+						<div class="alert alert-danger" th:if="${incorrectPassword}">
+							<strong>Incorrect Password!!</strong> Please enter correct password.
+						</div>
+						<div class="alert alert-success" th:if="${updateSuccess}">
+							<strong>Update Success</strong>
+						</div>
+							<form th:action="@{/updateUserInfo}" method="post">
+								<div class="form-group">
+									<div class="row">
+										<div class="col-lg-6 col-md-6 col-xs-6">
+											<label for="firstName">First Name</label> <input type="text"
+												class="form-control" name="firstName" id="firstName"
+												th:value="${user.firstName}" />
+												<input type="text"
+												class="form-control" hidden="hidden" name="id" id="id"
+												th:value="${user.id}" />
+										</div>
+										<div class="col-lg-6 col-md-6 col-xs-6">
+											<label for="lastName">Last Name</label> <input type="text"
+												class="form-control" name="lastName" id="lastName"
+												th:value="${user.lastName}" />
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="userName">Username</label> <input type="text"
+										class="form-control" id="userName" name="username"
+										th:value="${user.username}" />
+								</div>
+								<div class="form-group">
+									<label for="currentPassword">Current Password</label> <input
+										type="password" class="form-control" id="currentPassword"
+										name="password" th:value="${currentPassword}" />
+									<p style="color: #828282">Enter current pass to change
+										email or pass.</p>
+								</div>
+
+								<div class="form-group">
+									<label for="emailAddress">Email Address</label> <input
+										type="text" class="form-control" id="emailAddress"
+										name="emailAddress" th:value="${user.email}" />
+									<p style="color: #828282">A valid email.</p>
+								</div>
+
+								<div class="form-group">
+									<label for="txtNewPassword">New Password</label> &nbsp; <span id="checkPasswordMatch" style="color: red;"></span>
+									<input
+										type="password" class="form-control" id="txtNewPassword"
+										name="newPassword" />
+
+								</div>
+								<div class="form-group">
+									<label for="txtConfirmPassword">Confirm Password</label> <input
+										type="password" class="form-control" id="txtConfirmPassword" />
+									<p style="color: #828282">Enter same pass in both fields.</p>
+								</div>
+								<button id="updateUserInfoButton" type="submit" class="btn btn-primary">Save</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- orders -->
+
+			<div th:classappend="${classActiveOrder}? 'in active'"
+				class="tab-pane container" id="tab2">
+				<div class="panel-group">
+					<div class="panel panel-default">
+						<div class="panel-body" style="background-color: #ededed;">
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- billing -->
+			<div class="tab-pane container" id="tab3"
+				th:classappend="${classActiveBilling}? 'in active'">
+				<div class="panel-group">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<nav aria-lable="breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item active"><a
+										th:href="@{/listOfCreditCards}"
+										th:style="${listOfCreditCards}? 'color:red'">List of
+											Credit Cards</a></li>
+									<li class="breadcrumb-item active"><a
+										th:href="@{/addNewCreditCard}"
+										th:style="${addNewCreditCard}? 'color:red'">Add(Update)
+											Credit Card</a></li>
+								</ol>
+							</nav>
+							<div th:if="${listOfCreditCards}">
+								<form th:action="@{/setDefaultPayment}" method="post">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>Default</th>
+												<th>Credit Card</th>
+												<th>Operations</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="userPayment : ${userPaymentList}">
+												<td><input type="radio" name="defaultUserPaymentId"
+													th:value="${userPayment.id}"
+													th:checked="${userPayment.deafaultPayment}" /></td>
+												<td th:text="${userPayment.cardName}"></td>
+												<td><a
+													th:href="@{/updateCreditCard(id=${userPayment.id})}"><i
+														class="fa fa-pencil"></i></a> <a
+													th:href="@{/removeCreditCard(id=${userPayment.id})}"><i
+														class="fa fa-times"></i></a></td>
+											</tr>
+										</tbody>
+									</table>
+									<button class="btn btn-primary" type="submit">Save</button>
+								</form>
+							</div>
+							<div th:if="${addNewCreditCard}">
+								<form th:action="@{/addNewCreditCard}" method="post">
+									<div class="bg-info" th:if="${updateUserPaymentInfo}">User
+										info updated.</div>
+									<input type="text" name="id" hidden="hidden"
+										th:value="${userPayment.id}" /> <input type="text" name="id"
+										hidden="hidden" th:text="INDIA"
+										th:value="${userBilling.userBillingCountry}" />
+
+									<div class="form-group">
+										<h5>Name of card:</h5>
+										<input type="text" class="form-control" id="cardName"
+											required="required" th:value="${userPayment.cardName}"
+											th:name="cardName" placeholder="Card Name" />
+									</div>
+									<!-- billing address -->
+									<hr />
+									<div class="form-group">
+										<h4>Billing Address:</h4>
+									</div>
+									<div class="form-group">
+										<label for="billingName">Name</label> <input type="text"
+											class="form-control" th:name="userBillingName"
+											id="billingName" placeholder="Receiver Name"
+											required="required" th:value="${userBilling.userBillingName}" />
+									</div>
+									<div class="form-group">
+										<label for="billingAddress">Address</label> <input type="text"
+											class="form-control" th:name="userBillingStreet1"
+											id="billingAddress" placeholder="Street Address 1"
+											required="required"
+											th:value="${userBilling.userBillingStreet1}" /> <br /> <input
+											type="text" class="form-control" th:name="userBillingStreet2"
+											id="billingAddress" placeholder="Street Address 2"
+											required="required"
+											th:value="${userBilling.userBillingStreet2}" />
+									</div>
+									<div class="row">
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label for="billingCity">City</label> <input type="text"
+													class="form-control" th:name="userBillingCity"
+													id="billingCity" placeholder="City" required="required"
+													th:value="${userBilling.userBillingCity}" />
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label for="billingState">State</label> <select
+													id="billingState" class="form-control"
+													th:name="userBillingState"
+													th:value="${userBilling.userBillingState}"
+													required="required">
+													<option disabled="disabled">Select option</option>
+													<option th:each="state : ${stateList}" th:text="${state}"
+														th:selected="(${userBilling.userBillingState}==${state})"></option>
+												</select>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label for="billingZipCode">ZipCode</label> <input
+													type="text" class="form-control"
+													th:name="userBillingZipCode" id="billingZipCode"
+													placeholder="ZipCode" required="required"
+													th:value="${userBilling.userBillingZipCode}" />
+											</div>
+										</div>
+									</div>
+									<!-- Credit Card Info -->
+									<hr />
+									<div class="form-group">
+										<h4>Credit Card Info:</h4>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<img src="/images/creditcard.png" class="img-responsive" /><br />
+											<div class="form-group">
+												<label for="cardType">Select card type: </label> <select
+													class="form-control" id="cardType" th:name="type"
+													th:value="${userPayment.type}">
+													<option value="visa">Visa</option>
+													<option value="maestro">Maestro</option>
+													<option value="mastercard">MasterCard</option>
+													<option value="rupay">RuPay</option>
+												</select>
+											</div>
+											<div class="form-group">
+												<label for="cardHolder">Card Holder name: </label> <input
+													type="text" class="form-control" th:name="holderName"
+													id="cardHolder" placeholder="Card Holder Name"
+													required="required" th:value="${userPayment.HolderName}" />
+											</div>
+											<div class="form-group">
+												<label for="cardHolder">Card Number: </label>
+												<div class="input-group">
+													<input type="tel" class="form-control" th:name="cardNumber"
+														id="cardNumber" placeholder="Valid 16 digit card no."
+														required="required" th:value="${userPayment.cardNumber}" />
+													<span class="input-group-addon"><i
+														class="fa fa-credit-card" aria-hidden="true"></i></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-7">
+												<div class="form-group">
+													<label for="expirationDate">Expiration Date: </label>
+													<div class="row">
+														<div class="col-sm-6">
+															<select class="form-control" name="expiryMonth"
+																required="required"
+																th:value="${userPayment.expiryMonth}">
+																<option disabled="disabled">--Exp. Month--</option>
+																<option value="01">January</option>
+																<option value="02">February</option>
+																<option value="03">March</option>
+																<option value="04">April</option>
+																<option value="05">May</option>
+																<option value="06">June</option>
+																<option value="07">July</option>
+																<option value="08">August</option>
+																<option value="09">September</option>
+																<option value="10">October</option>
+																<option value="11">November</option>
+																<option value="12">December</option>
+															</select>
+														</div>
+														<div class="col-sm-6">
+															<select class="form-control" name="expiryYear"
+																required="required" th:value="${userPayment.expiryYear}">
+																<option disabled="disabled">--Exp. Year--</option>
+																<option value="2020">2020</option>
+																<option value="2021">2021</option>
+																<option value="2022">2022</option>
+																<option value="2023">2023</option>
+																<option value="2024">2024</option>
+																<option value="2025">2025</option>
+																<option value="2026">2026</option>
+																<option value="2027">2027</option>
+																<option value="2028">2028</option>
+																<option value="2029">2029</option>
+																<option value="2030">2030</option>
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-sm-5">
+												<div class="form-gropu">
+													<label for="cardCVV">CVV: </label> <input id="cardCVV"
+														type="tel" class="form-control" th:name="cvv"
+														placeholder="CVV" th:value="${userPayment.cvv}" />
+												</div>
+											</div>
+										</div>
+									</div>
+									<button type="submit" class="btn btn-primary btn-lg">Save
+										All</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- shipping -->
+			<div class="tab-pane container" id="tab4"
+				th:classappend="${classActiveShipping}? 'in active'">
+				<div class="panel-gropu">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<nav aria-lable="breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item active"><a
+										th:href="@{/listOfShippingAddresses}"
+										th:style="${listOfShippingAddresses}? 'color:red'">List of
+											Shipping Addresses</a></li>
+									<li class="breadcrumb-item active"><a
+										th:href="@{/addNewShippingAddress}"
+										th:style="${addNewShippingAddress}? 'color:red'">Add(Update)
+											Shipping Address</a></li>
+								</ol>
+							</nav>
+							<div th:if="${listOfShippingAddresses}">
+								<form th:action="@{/setDefaultShippingAddress}" method="post">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>Default</th>
+												<th>Shipping Address</th>
+												<th>Operations</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="userShipping : ${userShippingList}">
+												<td><input type="radio" name="defaultShippingAddressId"
+													th:value="${userShipping.id}"
+													th:checked="${userShipping.userShippingDefault}" /><span>default</span></td>
+												<td
+													th:text="${userShipping.userShippingStreet1}+','+${userShipping.userShippingCity}+','+${userShipping.userShippingState}"></td>
+												<td><a
+													th:href="@{/updateUserShipping(id=${userShipping.id})}"><i
+														class="fa fa-pencil"></i></a> <a
+													th:href="@{/removeUserShipping(id=${userShipping.id})}"><i
+														class="fa fa-times"></i></a></td>
+											</tr>
+										</tbody>
+									</table>
+									<button class="btn btn-primary" type="submit">Save</button>
+								</form>
+							</div>
+							<div th:if="${addNewShippingAddress}">
+								<form th:action="@{/addNewShippingAddress}" method="post">
+									<div class="bg-info" th:if="${updateUserShippingInfo}">User
+										info updated.</div>
+									<input type="text" name="id" hidden="hidden"
+										th:value="${userShipping.id}" />
+
+									<!-- shipping address -->
+									<hr />
+									<div class="form-group">
+										<h4>Shipping Address:</h4>
+									</div>
+									<div class="form-group">
+										<label for="shippingName">Name</label> <input type="text"
+											class="form-control" th:name="userShippingName"
+											id="shippingName" placeholder="Receiver Name"
+											required="required"
+											th:value="${userShipping.userShippingName}" />
+									</div>
+									<div class="form-group">
+										<label for="billingAddress">Address</label> <input type="text"
+											class="form-control" th:name="userShippingStreet1"
+											id="shippingAddress" placeholder="Street Address 1"
+											required="required"
+											th:value="${userShipping.userShippingStreet1}" /> <br /> <input
+											type="text" class="form-control"
+											th:name="userShippingStreet2" placeholder="Street Address 2"
+											th:value="${userShipping.userShippingStreet2}" />
+									</div>
+									<div class="row">
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label for="shippingCity">City</label> <input type="text"
+													class="form-control" th:name="userShippingCity"
+													id="shippingCity" placeholder="Shipping City"
+													required="required"
+													th:value="${userShipping.userShippingCity}" />
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label for="shippingState">State</label> <select
+													id="shippingState" class="form-control"
+													th:name="userShippingState"
+													th:value="${userShipping.userShippingState}"
+													required="required">
+													<option disabled="disabled">Select option</option>
+													<option th:each="state : ${stateList}" th:text="${state}"
+														th:selected="(${userShipping.userShippingState}==${state})"></option>
+												</select>
+											</div>
+										</div>
+										<div class="col-sm-4">
+											<div class="form-group">
+												<label for="shippingZipCode">ZipCode</label> <input
+													type="text" class="form-control"
+													th:name="userShippingZipCode" id="shippingZipCode"
+													placeholder="ZipCode" required="required"
+													th:value="${userShipping.userShippingZipCode}" />
+											</div>
+										</div>
+									</div>
+									<hr />
+									<button type="submit" class="btn btn-primary btn-lg">Save</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="common/header :: body-bottom-scripts"></div>
+</body>
+</html>
